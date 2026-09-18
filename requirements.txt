@@ -1,6 +1,7 @@
 streamlit
-geemap
+geemap>=0.32.0
 earthengine-api
-folium
+folium>=0.15.0
+xyzservices
 matplotlib
 pandas
