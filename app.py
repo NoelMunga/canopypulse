@@ -1,6 +1,7 @@
+
 import streamlit as st
 import folium
-from streamlit_folium import st_folium
+import streamlit.components.v1 as components
 import ee
 import pandas as pd
 
@@ -20,7 +21,7 @@ baseline_year = st.sidebar.selectbox("Select Baseline Year:", [2011, 2016, 2021]
 target_year = st.sidebar.selectbox("Select Comparison Year:", [2026], index=0)
 ndvi_threshold = st.sidebar.slider("Forest Canopy Threshold (NDVI):", 0.3, 0.8, 0.6)
 
-# 3. Interactive Map Setup using standard Folium
+# 3. Interactive Map Setup
 m = folium.Map(location=[0.0, 37.0], zoom_start=7, tiles="OpenStreetMap")
 
 # 4. Two-Column Dashboard Layout
@@ -28,7 +29,9 @@ col1, col2 = st.columns([3, 1])
 
 with col1:
     st.subheader("Interactive Satellite Map")
-    st_folium(m, width="100%", height=550)
+    # Convert folium map to raw HTML iframe for rock-solid embedding
+    map_html = m.get_root().render()
+    components.html(map_html, height=550)
 
 with col2:
     st.subheader("Analytics Dashboard")
