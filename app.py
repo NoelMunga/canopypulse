@@ -1,5 +1,6 @@
 import streamlit as st
-import geemap.foliumap as geemap
+import folium
+from streamlit_folium import st_folium
 import ee
 import pandas as pd
 
@@ -7,7 +8,7 @@ st.set_page_config(layout="wide", page_title="CanopyPulse: Forest Loss Tracker")
 st.title("🌲 CanopyPulse: 15-Year Forest Cover & Deforestation Tracker")
 st.markdown("Select a region to analyze satellite canopy changes across **2011, 2016, 2021, and 2026**.")
 
-# 1. Initialize Earth Engine with your registered project ID
+# 1. Initialize Earth Engine
 try:
     ee.Initialize(project='canopypulse')
 except Exception as e:
@@ -19,16 +20,15 @@ baseline_year = st.sidebar.selectbox("Select Baseline Year:", [2011, 2016, 2021]
 target_year = st.sidebar.selectbox("Select Comparison Year:", [2026], index=0)
 ndvi_threshold = st.sidebar.slider("Forest Canopy Threshold (NDVI):", 0.3, 0.8, 0.6)
 
-# 3. Interactive Map Setup
-m = geemap.Map(center=[0.0, 37.0], zoom=7)
-m.add_draw_control()
+# 3. Interactive Map Setup using standard Folium
+m = folium.Map(location=[0.0, 37.0], zoom_start=7, tiles="OpenStreetMap")
 
 # 4. Two-Column Dashboard Layout
 col1, col2 = st.columns([3, 1])
 
 with col1:
     st.subheader("Interactive Satellite Map")
-    m.to_streamlit(height=550)
+    st_folium(m, width="100%", height=550)
 
 with col2:
     st.subheader("Analytics Dashboard")
